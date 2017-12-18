@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{../common}
+\usepackage{bm}
 \usepackage{../pagesetup}
 % **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
 
@@ -171,6 +172,33 @@ The forward approach is called moment projection. The backward approach is calle
  
 \smallskip
 This work is highly related to Generative Adversarial Networks (GANs). This metric is important in producing non-blurry images. Combining two images looks bad, using a method with mode finding yields a better image.
+
+\subsection{Exercise}
+Show that the entropy of the multivariate Gaussian $N(x|\bm{\mu},\bm{\Sigma})$ is given by
+$$H[x] =  \frac{N}{2} \ln(2 \pi e) + \frac{1}{2}\ln(|\bm{\Sigma}|), $$
+where $N$ is the dimensionality of $x$.
+
+
+\textbf{Solution}
+Let $A = (2 \pi)^{N/2} \sqrt{|\bm{\Sigma}|}$ and $B = -\frac{1}{2}(x-\bm{\mu})^T \bm{\Sigma}^{-1} (x-\bm{\mu})$.
+We can simplify using integral rules, logarithm rules, and substitution as follows:
+
+\begin{align*}
+  H &= -\int_{-\infty}^{\infty} \frac{1}{A} \exp(B)\left[\ln \left(\frac{1}{A} \exp(B)\right)\right] dx \\
+  &= -\int_{-\infty}^{\infty} \frac{1}{A} \exp(B)\left[\ln \frac{1}{A} +B\right] dx \\
+  &= \ln A \int_{-\infty}^{\infty} \frac{1}{A} \exp(B) dx - \int_{\infty}^{\infty} \frac{B}{A} \exp(B) dx \\
+  &= \frac{1}{2} \ln ((2\pi)^N |\bm{\Sigma}|) + \frac{1}{2} \int_{-\infty}^{\infty} \frac{(x-\bm{\mu})^T \bm{\Sigma}^{-1} (x-\bm{\mu})}{(2\pi)^{N/2} \sqrt{|\bm{\Sigma}|}} \exp\left[-\frac{1}{2}(x-\bm{\mu})^T\bm{\Sigma}^{-1}(x-\bm{\mu})\right] dx 
+\end{align*}
+
+We know that the second integral is equal to the following expectation, and we can also use summation rules to simplify:
+\begin{align*}
+    &\frac{1}{2} \int_{-\infty}^{\infty} \frac{(x-\bm{\mu})^T \bm{\Sigma}^{-1} (x-\bm{\mu})}{(2\pi)^{N/2} \sqrt{|\bm{\Sigma}|}} \exp\left[-\frac{1}{2}(x-\bm{\mu})^T\bm{\Sigma}^{-1}(x-\bm{\mu})\right] dx \\
+    &= \frac{1}{2}E\left[\sum_{ij} (x_i - \mu_i) \bm{\Sigma}^{-1}_{ij} (x_j - \mu_j)\right] = \frac{1}{2}E\left[\sum_{ij} (x_j - \mu_j) (x_i - \mu_i) \right] \bm{\Sigma}^{-1}_{ij} \\
+    &= \frac{1}{2} \sum_{ij} \bm{\Sigma}_{ji} \bm{\Sigma}^{-1}_{ij} = \frac{1}{2} \sum_j (\bm{\Sigma} \bm{\Sigma}^{-1})_{jj} = \frac{1}{2} \sum_j I_{jj} = \frac{N}{2} \\ 
+\end{align*}
+
+Therefore, the final sum simplifies as
+$$\frac{1}{2} \ln((2\pi^N) |\bm{\Sigma}|) + \frac{N}{2} = \frac{1}{2} \ln((2 \pi e)^N |\bm{\Sigma}|)  = \frac{N}{2} \ln(2 \pi e) + \frac{1}{2}\ln(|\bm{\Sigma}|)$$
 
 \subsection{Demo}
 
